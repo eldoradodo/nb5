@@ -1,34 +1,31 @@
 import axios from 'axios';
 
-const BASE_URL = 'https://moneyfulpublicpolicy.co.kr';
+const API_URL = 'https://moneyfulpublicpolicy.co.kr';
 
-// 회원가입 API 함수
 export const register = async (userData) => {
-    const response = await axios.post(`${BASE_URL}/register`, userData);
-    return response.data;
-};
-
-// 로그인 API 함수
-export const login = async (credentials) => {
-    const response = await axios.post(`${BASE_URL}/login`, credentials);
-    return response.data;
-};
-
-// 사용자 정보 확인 API 함수
-export const getUserInfo = async (token) => {
-    const response = await axios.get(`${BASE_URL}/user`, {
-        headers: { Authorization: `Bearer ${token}` }
-    });
-    return response.data;
-};
-
-// 프로필 변경 API 함수
-export const updateProfile = async (formData, token) => {
-    const response = await axios.patch(`${BASE_URL}/profile`, formData, {
-        headers: {
-            'Content-Type': 'multipart/form-data',
-            'Authorization': `Bearer ${token}`
+    try {
+        const response = await axios.post(`${API_URL}/register`, userData);
+        return response.data;
+    } catch (error) {
+        if (error.response && error.response.status === 409) {
+            throw new Error('이미 존재하는 아이디입니다.');
+        } else {
+            throw new Error('회원가입 중 오류가 발생했습니다.');
         }
+    }
+};
+
+export const login = async (credentials) => {
+    const response = await axios.post(`${API_URL}/login`, credentials);
+    return response.data;
+};
+
+export const getUserInfo = async (token) => {
+    const response = await axios.get(`${API_URL}/user`, {
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+        },
     });
     return response.data;
 };

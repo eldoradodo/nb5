@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import Detail from './pages/Detail';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Profile from './pages/Profile';
 import Navbar from './components/Navbar';
 import { AuthProvider } from './context/authContext';
 
@@ -21,6 +22,7 @@ const App = () => {
                         <Route path="/detail/:id" element={<Detail />} />
                         <Route path="/login" element={<Login />} />
                         <Route path="/register" element={<Register />} />
+                        <Route path="/profile" element={<Profile />} />
                     </Routes>
                 </AuthProvider>
             </Router>
