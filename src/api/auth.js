@@ -2,19 +2,19 @@ import axios from 'axios';
 
 const BASE_URL = 'https://moneyfulpublicpolicy.co.kr';
 
-// 회원가입 API
+// 회원가입 API 함수
 export const register = async (userData) => {
     const response = await axios.post(`${BASE_URL}/register`, userData);
     return response.data;
 };
 
-// 로그인 API
+// 로그인 API 함수
 export const login = async (credentials) => {
     const response = await axios.post(`${BASE_URL}/login`, credentials);
     return response.data;
 };
 
-// 사용자 정보 확인 API
+// 사용자 정보 확인 API 함수
 export const getUserInfo = async (token) => {
     const response = await axios.get(`${BASE_URL}/user`, {
         headers: { Authorization: `Bearer ${token}` }
@@ -22,7 +22,7 @@ export const getUserInfo = async (token) => {
     return response.data;
 };
 
-// 프로필 변경 API
+// 프로필 변경 API 함수
 export const updateProfile = async (formData, token) => {
     const response = await axios.patch(`${BASE_URL}/profile`, formData, {
         headers: {

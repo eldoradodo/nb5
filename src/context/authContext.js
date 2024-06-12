@@ -1,7 +1,6 @@
-import { createContext, useState, useContext, useEffect } from 'react';
-import axios from 'axios';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getUserInfo, login as loginApi } from '../api/auth';
+import { getUserInfo, login as loginApi, register as registerApi } from '../api/auth';
 
 // AuthContext 생성
 const AuthContext = createContext();
@@ -25,6 +24,11 @@ export const AuthProvider = ({ children }) => {
         navigate('/login');
     };
 
+    // 회원가입 함수
+    const register = async (userData) => {
+        await registerApi(userData);
+    };
+
     // 인증 상태 확인 함수
     const checkAuth = async () => {
         const token = localStorage.getItem('accessToken');
@@ -43,7 +47,7 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     return (
-        <AuthContext.Provider value={{ auth, login, logout }}>
+        <AuthContext.Provider value={{ auth, login, logout, register }}>
             {children}
         </AuthContext.Provider>
     );

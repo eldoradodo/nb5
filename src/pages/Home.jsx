@@ -1,8 +1,8 @@
-import styled from "styled-components";
-import { useState } from "react";
-import MonthNavigation from "../components/MonthNavigation";
-import ExpenseList from "../components/ExpenseList";
-import CreateExpense from "../components/CreateExpense";
+import styled from 'styled-components';
+import MonthNavigation from '../components/MonthNavigation';
+import ExpenseList from '../components/ExpenseList';
+import CreateExpense from '../components/CreateExpense';
+import { useExpenses } from '../hooks/useExpenses';
 
 const Container = styled.main`
   max-width: 800px;
@@ -19,22 +19,29 @@ export const Section = styled.section`
   padding: 20px;
 `;
 
-export default function Home({ expenses, setExpenses }) {
+export default function Home() {
   const [month, setMonth] = useState(1);
+  const { expenses, isLoading, error, addExpense, updateExpense, deleteExpense } = useExpenses();
 
-  const filteredExpenses = expenses.filter(
-    (expense) => expense.month === month
-  );
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
+  const filteredExpenses = expenses.filter((expense) => expense.month === month);
 
   return (
     <Container>
       <MonthNavigation month={month} setMonth={setMonth} />
-      <CreateExpense
-        month={month}
-        expenses={expenses}
-        setExpenses={setExpenses}
+      <CreateExpense month={month} addExpense={addExpense} />
+      <ExpenseList
+        expenses={filteredExpenses}
+        updateExpense={updateExpense}
+        deleteExpense={deleteExpense}
       />
-      <ExpenseList expenses={filteredExpenses} />
     </Container>
   );
 }

@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { register as registerApi } from '../api/auth';
+import { useAuth } from '../context/authContext';
 
 const Register = () => {
     const [id, setId] = useState('');
@@ -8,11 +8,12 @@ const Register = () => {
     const [nickname, setNickname] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
+    const { register } = useAuth();
 
     const handleRegister = async (e) => {
         e.preventDefault();
         try {
-            await registerApi({ id, password, nickname });
+            await register({ id, password, nickname });
             navigate('/login');
         } catch (err) {
             setError('회원가입에 실패했습니다.');

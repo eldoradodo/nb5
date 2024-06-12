@@ -1,7 +1,7 @@
-import { Section } from "../pages/Home";
-import styled from "styled-components";
-import { useState } from "react";
-import { v4 as uuidv4 } from "uuid";
+import React, { useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+import { Section } from '../pages/Home';
+import styled from 'styled-components';
 
 const InputRow = styled.div`
   display: flex;
@@ -45,41 +45,40 @@ const AddButton = styled.button`
   }
 `;
 
-export default function CreateExpense({ month, expenses, setExpenses }) {
-  const [newDate, setNewDate] = useState(
-    `2024-${String(month).padStart(2, "0")}-01`
-  );
-  const [newItem, setNewItem] = useState("");
-  const [newAmount, setNewAmount] = useState("");
-  const [newDescription, setNewDescription] = useState("");
+export default function CreateExpense({ month, addExpense }) {
+  const [newDate, setNewDate] = useState(`2024-${String(month).padStart(2, '0')}-01`);
+  const [newItem, setNewItem] = useState('');
+  const [newAmount, setNewAmount] = useState('');
+  const [newDescription, setNewDescription] = useState('');
 
   const handleAddExpense = () => {
     const datePattern = /^\d{4}-\d{2}-\d{2}$/;
     if (!datePattern.test(newDate)) {
-      alert("날짜를 YYYY-MM-DD 형식으로 입력해주세요.");
+      alert('날짜를 YYYY-MM-DD 형식으로 입력해주세요.');
       return;
     }
 
     const parsedAmount = parseInt(newAmount, 10);
     if (!newItem || parsedAmount <= 0) {
-      alert("유효한 항목과 금액을 입력해주세요.");
+      alert('유효한 항목과 금액을 입력해주세요.');
       return;
     }
 
     const newExpense = {
       id: uuidv4(),
-      month: parseInt(newDate.split("-")[1], 10),
+      month: parseInt(newDate.split('-')[1], 10),
       date: newDate,
       item: newItem,
       amount: parsedAmount,
       description: newDescription,
+      createdBy: 'currentUser', // 사용자 정보가 필요합니다.
     };
 
-    setExpenses([...expenses, newExpense]);
-    setNewDate(`2024-${String(month).padStart(2, "0")}-01`);
-    setNewItem("");
-    setNewAmount("");
-    setNewDescription("");
+    addExpense(newExpense);
+    setNewDate(`2024-${String(month).padStart(2, '0')}-01`);
+    setNewItem('');
+    setNewAmount('');
+    setNewDescription('');
   };
 
   return (

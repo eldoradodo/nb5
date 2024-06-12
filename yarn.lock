@@ -1999,7 +1999,7 @@ json-schema-traverse@^0.4.1:
 
 json-server@^1.0.0-beta.1:
   version "1.0.0-beta.1"
-  resolved "https://registry.npmjs.org/json-server/-/json-server-1.0.0-beta.1.tgz"
+  resolved "https://registry.yarnpkg.com/json-server/-/json-server-1.0.0-beta.1.tgz#f7b9efe1bddb0affdd12fab308ea0480cd00f184"
   integrity sha512-xOKYyxkVai66OTFZq5ulAaXYkqiKMbzVED9tRZ+CMg6v6iaSdIVYas5tIjSMw/mYwDL/nJFTCca308gaL0coyA==
   dependencies:
     "@tinyhttp/app" "^2.2.3"
