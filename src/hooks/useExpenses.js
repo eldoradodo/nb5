@@ -4,21 +4,27 @@ import { getExpenses, addExpense, updateExpense, deleteExpense } from '../api/ex
 export const useExpenses = () => {
     const queryClient = useQueryClient();
 
-    const { data: expenses, error, isLoading } = useQuery(['expenses'], getExpenses);
+    const { data: expenses, error, isLoading } = useQuery({
+        queryKey: ['expenses'],
+        queryFn: getExpenses,
+    });
 
-    const addExpenseMutation = useMutation(addExpense, {
+    const addExpenseMutation = useMutation({
+        mutationFn: addExpense,
         onSuccess: () => {
             queryClient.invalidateQueries(['expenses']);
         }
     });
 
-    const updateExpenseMutation = useMutation(updateExpense, {
+    const updateExpenseMutation = useMutation({
+        mutationFn: updateExpense,
         onSuccess: () => {
             queryClient.invalidateQueries(['expenses']);
         }
     });
 
-    const deleteExpenseMutation = useMutation(deleteExpense, {
+    const deleteExpenseMutation = useMutation({
+        mutationFn: deleteExpense,
         onSuccess: () => {
             queryClient.invalidateQueries(['expenses']);
         }
