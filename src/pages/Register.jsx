@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Register = () => {
   const [credentials, setCredentials] = useState({ id: '', password: '', nickname: '' });
   const { register } = useAuth();
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -14,9 +15,24 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (credentials.id.length < 4 || credentials.id.length > 10) {
+      setError('아이디는 4~10글자로 입력해주세요.');
+      return;
+    }
+    if (credentials.password.length < 4 || credentials.password.length > 15) {
+      setError('비밀번호는 4~15글자로 입력해주세요.');
+      return;
+    }
+    if (credentials.nickname.length < 1 || credentials.nickname.length > 10) {
+      setError('닉네임은 1~10글자로 입력해주세요.');
+      return;
+    }
+
     try {
       await register(credentials);
       alert('회원가입 성공! 로그인 페이지로 이동합니다.');
+      navigate('/login');
     } catch (error) {
       setError(error.message);
     }
@@ -72,7 +88,7 @@ const formContainerStyle = {
   justifyContent: 'center',
   alignItems: 'center',
   height: '100vh',
-  backgroundColor: '#f0f0f0'
+  backgroundColor: '#cbbfff'
 };
 
 const formStyle = {
@@ -108,7 +124,7 @@ const buttonStyle = {
   padding: '10px 20px',
   borderRadius: '5px',
   border: 'none',
-  backgroundColor: '#2ec4b6',
+  backgroundColor: '#6543ff',
   color: '#ffffff',
   fontSize: '16px',
   cursor: 'pointer',
@@ -119,7 +135,7 @@ const registerLinkStyle = {
   display: 'block',
   marginTop: '10px',
   textAlign: 'center',
-  color: '#2ec4b6',
+  color: '#6543ff',
   textDecoration: 'none',
   fontWeight: 'bold'
 };

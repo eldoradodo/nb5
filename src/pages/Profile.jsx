@@ -71,7 +71,7 @@ const formContainerStyle = {
   justifyContent: 'center',
   alignItems: 'center',
   height: '100vh',
-  backgroundColor: '#f0f0f0'
+  backgroundColor: '#cbbfff'
 };
 
 const formStyle = {
@@ -107,7 +107,7 @@ const buttonStyle = {
   padding: '10px 20px',
   borderRadius: '5px',
   border: 'none',
-  backgroundColor: '#2ec4b6',
+  backgroundColor: '#6543ff',
   color: '#ffffff',
   fontSize: '16px',
   cursor: 'pointer',

@@ -7,7 +7,7 @@ export default function MonthNavigation({ month, setMonth }) {
   return (
     <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
       <div style={{
-        backgroundColor: '#CAF0F8',
+        backgroundColor: '#a8aaf8',
         borderRadius: '10px',
         padding: '20px',
         display: 'flex',
@@ -21,7 +21,7 @@ export default function MonthNavigation({ month, setMonth }) {
               style={{
                 padding: '10px 20px',
                 borderRadius: '50px',
-                backgroundColor: element === month ? '#38B000' : '#FFFFFF',
+                backgroundColor: element === month ? '#6543ff' : '#FFFFFF',
                 color: element === month ? '#FFFFFF' : '#000000',
                 border: element === month ? 'none' : '1px solid #D1D5DB',
                 cursor: 'pointer'
@@ -39,7 +39,7 @@ export default function MonthNavigation({ month, setMonth }) {
               style={{
                 padding: '10px 20px',
                 borderRadius: '50px',
-                backgroundColor: element === month ? '#38B000' : '#FFFFFF',
+                backgroundColor: element === month ? '#6543ff' : '#FFFFFF',
                 color: element === month ? '#FFFFFF' : '#000000',
                 border: element === month ? 'none' : '1px solid #D1D5DB',
                 cursor: 'pointer'

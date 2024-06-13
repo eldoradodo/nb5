@@ -14,6 +14,16 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (credentials.id.length < 4 || credentials.id.length > 10) {
+      setError('아이디는 4~10글자로 입력해주세요.');
+      return;
+    }
+    if (credentials.password.length < 4 || credentials.password.length > 15) {
+      setError('비밀번호는 4~15글자로 입력해주세요.');
+      return;
+    }
+
     try {
       await login(credentials);
     } catch (error) {
@@ -60,7 +70,7 @@ const formContainerStyle = {
   justifyContent: 'center',
   alignItems: 'center',
   height: '100vh',
-  backgroundColor: '#f0f0f0'
+  backgroundColor: '#cbbfff'
 };
 
 const formStyle = {
@@ -96,7 +106,7 @@ const buttonStyle = {
   padding: '10px 20px',
   borderRadius: '5px',
   border: 'none',
-  backgroundColor: '#2ec4b6',
+  backgroundColor: '#6543ff',
   color: '#ffffff',
   fontSize: '16px',
   cursor: 'pointer',
@@ -107,7 +117,7 @@ const registerLinkStyle = {
   display: 'block',
   marginTop: '10px',
   textAlign: 'center',
-  color: '#2ec4b6',
+  color: '#6543ff',
   textDecoration: 'none',
   fontWeight: 'bold'
 };

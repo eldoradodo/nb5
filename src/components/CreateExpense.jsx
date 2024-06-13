@@ -111,7 +111,7 @@ const buttonStyle = {
   padding: '10px 20px',
   borderRadius: '5px',
   border: 'none',
-  backgroundColor: '#38B000',
+  backgroundColor: '#6543ff',
   color: '#FFFFFF',
   cursor: 'pointer',
   fontSize: '16px',

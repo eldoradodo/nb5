@@ -5,7 +5,6 @@ import CreateExpense from '../components/CreateExpense';
 import MonthNavigation from '../components/MonthNavigation';
 
 const Home = () => {
-    // 기본 월을 1월로 설정
     const [selectedMonth, setSelectedMonth] = useState(1);
     const { expenses, error, isLoading, addExpense, updateExpense, deleteExpense } = useExpenses(selectedMonth);
 
@@ -18,15 +17,17 @@ const Home = () => {
     if (error) return <div>Error: {error.message}</div>;
 
     return (
-        <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto', backgroundColor: '#FFFFFF', borderRadius: '10px', boxShadow: '0 0 10px rgba(0,0,0,0.1)' }}>
-            <h1 style={{ fontSize: '24px', marginBottom: '20px' }}>지출 관리</h1>
-            <MonthNavigation month={selectedMonth} setMonth={setSelectedMonth} />
-            <CreateExpense addExpense={addExpense} />
-            <ExpenseList
-                expenses={filteredExpenses}
-                updateExpense={updateExpense}
-                deleteExpense={deleteExpense}
-            />
+        <div className="container mx-auto p-4 bg-white rounded-lg shadow-lg">
+            <h1 className="text-3xl mb-4 text-center text-blue-500">지출 관리</h1>
+            <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto', backgroundColor: '#FFFFFF', borderRadius: '10px', boxShadow: '0 0 10px rgba(0,0,0,0.1)' }}>
+                <MonthNavigation month={selectedMonth} setMonth={setSelectedMonth} />
+                <CreateExpense addExpense={addExpense} />
+                <ExpenseList
+                    expenses={filteredExpenses}
+                    updateExpense={updateExpense}
+                    deleteExpense={deleteExpense}
+                />
+            </div>
         </div>
     );
 };

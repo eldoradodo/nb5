@@ -87,7 +87,7 @@ const cardTitleStyle = {
 
 const cardAmountStyle = {
   fontSize: '18px',
-  color: '#38B000',
+  color: '#6543ff',
   fontWeight: 'bold'
 };
 

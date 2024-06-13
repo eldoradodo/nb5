@@ -126,6 +126,15 @@
       "date": "2024-06-13",
       "createdBy": "네오2",
       "userId": "1234"
+    },
+    {
+      "id": "e26b",
+      "date": "2024-12-13",
+      "item": "카카오프렌즈",
+      "amount": "5000",
+      "description": "네오 인형",
+      "createdBy": "네오2",
+      "userId": "1234"
     }
   ]
 }

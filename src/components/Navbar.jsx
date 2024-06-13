@@ -8,15 +8,15 @@ export default function Navbar() {
   return (
     <nav style={navStyle}>
       <div style={navLeftStyle}>
-        <Link to="/" style={navButtonStyle}>홈</Link>
-        {user && <Link to="/profile" style={navButtonStyle}>내 프로필</Link>}
+        <Link to="/" style={navButtonStyle}>HOME</Link>
+        {user && <Link to="/profile" style={navButtonStyle}>MY PROFILE</Link>}
       </div>
       <div style={navRightStyle}>
         {user ? (
           <>
             <img src={user.avatar} alt="프로필" style={avatarStyle} />
             <span style={nicknameStyle}>{user.nickname}</span>
-            <button onClick={logout} style={logoutButtonStyle}>로그아웃</button>
+            <button onClick={logout} style={logoutButtonStyle}>LOGOUT</button>
           </>
         ) : (
           <>
@@ -34,10 +34,11 @@ const navStyle = {
   justifyContent: 'space-between',
   alignItems: 'center',
   padding: '10px 20px',
-  backgroundColor: '#2ec4b6',
+  backgroundColor: '#8c8ddd',
   color: '#FFFFFF',
-  boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-  borderBottom: '1px solid #D1D5DB'
+
+
+
 };
 
 const navLeftStyle = {
@@ -76,7 +77,7 @@ const logoutButtonStyle = {
   padding: '10px 20px',
   borderRadius: '5px',
   border: 'none',
-  backgroundColor: '#EF4444',
+  backgroundColor: '#6543ff',
   color: '#FFFFFF',
   cursor: 'pointer',
   fontWeight: 'bold'
