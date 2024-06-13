@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
 
 export default function CreateExpense({ addExpense }) {
+  const { user } = useAuth(); // 현재 로그인한 사용자 정보 가져오기
   const [date, setDate] = useState('');
   const [item, setItem] = useState('');
   const [amount, setAmount] = useState('');
@@ -8,7 +10,18 @@ export default function CreateExpense({ addExpense }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    addExpense({ date, item, amount, description });
+    if (!user) {
+      alert('로그인이 필요합니다.');
+      return;
+    }
+    addExpense({ 
+      date, 
+      item, 
+      amount, 
+      description, 
+      createdBy: user.nickname, 
+      userId: user.id 
+    });
     setDate('');
     setItem('');
     setAmount('');

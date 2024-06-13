@@ -5,9 +5,6 @@ export default function ExpenseList({ expenses, updateExpense, deleteExpense }) 
   const { user } = useAuth();
 
   const handleClick = (expense) => {
-    console.log('User ID:', user.id);
-    console.log('Expense User ID:', expense.userId);
-
     if (expense.userId !== user.id) {
       alert('작성자만 수정 및 삭제가 가능합니다.');
     } else {
@@ -18,11 +15,14 @@ export default function ExpenseList({ expenses, updateExpense, deleteExpense }) 
         const newDescription = prompt('새로운 설명을 입력하세요:', expense.description);
 
         if (newItem && newAmount && newDescription) {
-          updateExpense(expense.id, {
-            ...expense,
+          updateExpense({
+            id: expense.id,
             item: newItem,
             amount: newAmount,
             description: newDescription,
+            date: expense.date,
+            createdBy: expense.createdBy,
+            userId: expense.userId
           });
         }
       } else {
@@ -45,6 +45,7 @@ export default function ExpenseList({ expenses, updateExpense, deleteExpense }) 
           <div style={cardBodyStyle}>
             <div style={cardDateStyle}>{expense.date}</div>
             <div style={cardDescriptionStyle}>{expense.description}</div>
+            <div style={cardCreatedByStyle}>작성자: {expense.createdBy}</div>
           </div>
         </div>
       ))}
@@ -103,4 +104,9 @@ const cardDateStyle = {
 
 const cardDescriptionStyle = {
   fontSize: '16px'
+};
+
+const cardCreatedByStyle = {
+  fontSize: '14px',
+  color: '#6B7280'
 };
