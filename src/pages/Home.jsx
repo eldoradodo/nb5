@@ -1,48 +1,34 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
-import MonthNavigation from '../components/MonthNavigation';
+import { useExpenses } from '../hooks/useExpenses';
 import ExpenseList from '../components/ExpenseList';
 import CreateExpense from '../components/CreateExpense';
-import { useExpenses } from '../hooks/useExpenses';
+import MonthNavigation from '../components/MonthNavigation';
 
-const Container = styled.main`
-  max-width: 800px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  margin: 0 auto;
-`;
+const Home = () => {
+    // 기본 월을 1월로 설정
+    const [selectedMonth, setSelectedMonth] = useState(1);
+    const { expenses, error, isLoading, addExpense, updateExpense, deleteExpense } = useExpenses(selectedMonth);
 
-export const Section = styled.section`
-  background-color: #ffffff;
-  border-radius: 16px;
-  padding: 20px;
-`;
+    const filteredExpenses = expenses ? expenses.filter(expense => {
+        const expenseDate = new Date(expense.date);
+        return expenseDate.getMonth() + 1 === selectedMonth;
+    }) : [];
 
-export default function Home() {
-  const [month, setMonth] = useState(1);
-  const { expenses, isLoading, error, addExpense, updateExpense, deleteExpense } = useExpenses();
+    if (isLoading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error.message}</div>;
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+    return (
+        <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto', backgroundColor: '#FFFFFF', borderRadius: '10px', boxShadow: '0 0 10px rgba(0,0,0,0.1)' }}>
+            <h1 style={{ fontSize: '24px', marginBottom: '20px' }}>지출 관리</h1>
+            <MonthNavigation month={selectedMonth} setMonth={setSelectedMonth} />
+            <CreateExpense addExpense={addExpense} />
+            <ExpenseList
+                expenses={filteredExpenses}
+                updateExpense={updateExpense}
+                deleteExpense={deleteExpense}
+            />
+        </div>
+    );
+};
 
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
-
-  const filteredExpenses = expenses.filter((expense) => expense.month === month);
-
-  return (
-    <Container>
-      <MonthNavigation month={month} setMonth={setMonth} />
-      <CreateExpense month={month} addExpense={addExpense} />
-      <ExpenseList
-        expenses={filteredExpenses}
-        updateExpense={updateExpense}
-        deleteExpense={deleteExpense}
-      />
-    </Container>
-  );
-}
+export default Home;

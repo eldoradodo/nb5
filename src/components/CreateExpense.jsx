@@ -1,131 +1,106 @@
 import React, { useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
-import { Section } from '../pages/Home';
-import styled from 'styled-components';
 
-const InputRow = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  align-items: flex-end;
-`;
+export default function CreateExpense({ addExpense }) {
+  const [date, setDate] = useState('');
+  const [item, setItem] = useState('');
+  const [amount, setAmount] = useState('');
+  const [description, setDescription] = useState('');
 
-const InputGroupInline = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-width: 120px;
-  label {
-    margin-bottom: 5px;
-    font-size: 14px;
-    color: #333;
-    text-align: left;
-  }
-  input {
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
-  }
-`;
-
-const AddButton = styled.button`
-  padding: 8px 20px;
-  height: 34px;
-  margin-top: 10px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
-  &:hover {
-    background-color: #0056b3;
-  }
-`;
-
-export default function CreateExpense({ month, addExpense }) {
-  const [newDate, setNewDate] = useState(`2024-${String(month).padStart(2, '0')}-01`);
-  const [newItem, setNewItem] = useState('');
-  const [newAmount, setNewAmount] = useState('');
-  const [newDescription, setNewDescription] = useState('');
-
-  const handleAddExpense = () => {
-    const datePattern = /^\d{4}-\d{2}-\d{2}$/;
-    if (!datePattern.test(newDate)) {
-      alert('날짜를 YYYY-MM-DD 형식으로 입력해주세요.');
-      return;
-    }
-
-    const parsedAmount = parseInt(newAmount, 10);
-    if (!newItem || parsedAmount <= 0) {
-      alert('유효한 항목과 금액을 입력해주세요.');
-      return;
-    }
-
-    const newExpense = {
-      id: uuidv4(),
-      month: parseInt(newDate.split('-')[1], 10),
-      date: newDate,
-      item: newItem,
-      amount: parsedAmount,
-      description: newDescription,
-      createdBy: 'currentUser', // 사용자 정보가 필요합니다.
-    };
-
-    addExpense(newExpense);
-    setNewDate(`2024-${String(month).padStart(2, '0')}-01`);
-    setNewItem('');
-    setNewAmount('');
-    setNewDescription('');
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    addExpense({ date, item, amount, description });
+    setDate('');
+    setItem('');
+    setAmount('');
+    setDescription('');
   };
 
   return (
-    <Section>
-      <InputRow>
-        <InputGroupInline>
-          <label htmlFor="date">날짜</label>
-          <input
-            type="text"
-            id="date"
-            value={newDate}
-            onChange={(e) => setNewDate(e.target.value)}
-            placeholder="YYYY-MM-DD"
-          />
-        </InputGroupInline>
-        <InputGroupInline>
-          <label htmlFor="item">항목</label>
-          <input
-            type="text"
-            id="item"
-            value={newItem}
-            onChange={(e) => setNewItem(e.target.value)}
-            placeholder="지출 항목"
-          />
-        </InputGroupInline>
-        <InputGroupInline>
-          <label htmlFor="amount">금액</label>
-          <input
-            type="number"
-            id="amount"
-            value={newAmount}
-            onChange={(e) => setNewAmount(e.target.value)}
-            placeholder="지출 금액"
-          />
-        </InputGroupInline>
-        <InputGroupInline>
-          <label htmlFor="description">내용</label>
-          <input
-            type="text"
-            id="description"
-            value={newDescription}
-            onChange={(e) => setNewDescription(e.target.value)}
-            placeholder="지출 내용"
-          />
-        </InputGroupInline>
-        <AddButton onClick={handleAddExpense}>저장</AddButton>
-      </InputRow>
-    </Section>
+    <form onSubmit={handleSubmit} style={formStyle}>
+      <div style={inputContainerStyle}>
+        <label style={labelStyle}>날짜</label>
+        <input
+          type="date"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+          style={inputStyle}
+        />
+      </div>
+      <div style={inputContainerStyle}>
+        <label style={labelStyle}>항목</label>
+        <input
+          type="text"
+          placeholder="지출 항목"
+          value={item}
+          onChange={(e) => setItem(e.target.value)}
+          style={inputStyle}
+        />
+      </div>
+      <div style={inputContainerStyle}>
+        <label style={labelStyle}>금액</label>
+        <input
+          type="number"
+          placeholder="지출 금액"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+          style={inputStyle}
+        />
+      </div>
+      <div style={inputContainerStyle}>
+        <label style={labelStyle}>내용</label>
+        <input
+          type="text"
+          placeholder="지출 내용"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          style={inputStyle}
+        />
+      </div>
+      <button type="submit" style={buttonStyle}>추가</button>
+    </form>
   );
 }
+
+const formStyle = {
+  display: 'flex',
+  flexDirection: 'row',
+  flexWrap: 'wrap',
+  gap: '20px',
+  backgroundColor: '#FFFFFF',
+  borderRadius: '10px',
+  padding: '20px',
+  boxShadow: '0 0 10px rgba(0,0,0,0.1)',
+  maxWidth: '800px',
+  margin: '20px auto'
+};
+
+const inputContainerStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '5px',
+  flex: '1 1 20%',
+  minWidth: '150px'
+};
+
+const labelStyle = {
+  fontSize: '14px',
+  fontWeight: 'bold'
+};
+
+const inputStyle = {
+  padding: '10px',
+  borderRadius: '5px',
+  border: '1px solid #D1D5DB',
+  fontSize: '14px'
+};
+
+const buttonStyle = {
+  padding: '10px 20px',
+  borderRadius: '5px',
+  border: 'none',
+  backgroundColor: '#38B000',
+  color: '#FFFFFF',
+  cursor: 'pointer',
+  fontSize: '16px',
+  alignSelf: 'flex-end'
+};

@@ -1,74 +1,132 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { useAuth } from '../context/AuthContext';
+import { Link } from 'react-router-dom';
 
 const Register = () => {
-  const [id, setId] = useState('');
-  const [password, setPassword] = useState('');
-  const [nickname, setNickname] = useState('');
+  const [credentials, setCredentials] = useState({ id: '', password: '', nickname: '' });
+  const { register } = useAuth();
   const [error, setError] = useState('');
-  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setCredentials({ ...credentials, [name]: value });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-
-    if (id.length < 4 || id.length > 10) {
-      setError('아이디는 4~10글자여야 합니다.');
-      return;
-    }
-
-    if (password.length < 4 || password.length > 15) {
-      setError('비밀번호는 4~15글자여야 합니다.');
-      return;
-    }
-
-    if (nickname.length < 1 || nickname.length > 10) {
-      setError('닉네임은 1~10글자여야 합니다.');
-      return;
-    }
-
     try {
-      await axios.post('https://moneyfulpublicpolicy.co.kr/register', { id, password, nickname });
-      alert('회원가입 성공!');
-      navigate('/login');
-    } catch (err) {
-      setError(err.response.data.message || '회원가입 실패');
+      await register(credentials);
+      alert('회원가입 성공! 로그인 페이지로 이동합니다.');
+    } catch (error) {
+      setError(error.message);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>회원가입</h2>
-      <div>
-        <label>아이디</label>
-        <input
-          type="text"
-          value={id}
-          onChange={(e) => setId(e.target.value)}
-        />
-      </div>
-      <div>
-        <label>비밀번호</label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </div>
-      <div>
-        <label>닉네임</label>
-        <input
-          type="text"
-          value={nickname}
-          onChange={(e) => setNickname(e.target.value)}
-        />
-      </div>
-      {error && <div>{error}</div>}
-      <button type="submit">회원가입</button>
-      <button type="button" onClick={() => navigate('/login')}>로그인</button>
-    </form>
+    <div style={formContainerStyle}>
+      <form onSubmit={handleSubmit} style={formStyle}>
+        <h2 style={titleStyle}>회원가입</h2>
+        <div style={inputContainerStyle}>
+          <label htmlFor="id">아이디</label>
+          <input
+            type="text"
+            name="id"
+            value={credentials.id}
+            onChange={handleChange}
+            required
+            style={inputStyle}
+          />
+        </div>
+        <div style={inputContainerStyle}>
+          <label htmlFor="password">비밀번호</label>
+          <input
+            type="password"
+            name="password"
+            value={credentials.password}
+            onChange={handleChange}
+            required
+            style={inputStyle}
+          />
+        </div>
+        <div style={inputContainerStyle}>
+          <label htmlFor="nickname">닉네임</label>
+          <input
+            type="text"
+            name="nickname"
+            value={credentials.nickname}
+            onChange={handleChange}
+            required
+            style={inputStyle}
+          />
+        </div>
+        {error && <p style={errorStyle}>{error}</p>}
+        <button type="submit" style={buttonStyle}>회원가입</button>
+        <Link to="/login" style={registerLinkStyle}>로그인</Link>
+      </form>
+    </div>
   );
+};
+
+const formContainerStyle = {
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  height: '100vh',
+  backgroundColor: '#f0f0f0'
+};
+
+const formStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '15px',
+  padding: '30px',
+  backgroundColor: '#ffffff',
+  borderRadius: '10px',
+  boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)'
+};
+
+const titleStyle = {
+  fontSize: '24px',
+  marginBottom: '20px',
+  textAlign: 'center'
+};
+
+const inputContainerStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '5px'
+};
+
+const inputStyle = {
+  padding: '10px',
+  borderRadius: '5px',
+  border: '1px solid #cccccc',
+  fontSize: '16px'
+};
+
+const buttonStyle = {
+  padding: '10px 20px',
+  borderRadius: '5px',
+  border: 'none',
+  backgroundColor: '#2ec4b6',
+  color: '#ffffff',
+  fontSize: '16px',
+  cursor: 'pointer',
+  marginTop: '10px'
+};
+
+const registerLinkStyle = {
+  display: 'block',
+  marginTop: '10px',
+  textAlign: 'center',
+  color: '#2ec4b6',
+  textDecoration: 'none',
+  fontWeight: 'bold'
+};
+
+const errorStyle = {
+  color: 'red',
+  fontSize: '14px'
 };
 
 export default Register;

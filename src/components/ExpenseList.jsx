@@ -1,89 +1,106 @@
 import React from 'react';
-import styled from 'styled-components';
+import { useAuth } from '../context/AuthContext';
 
-const ListContainer = styled.div`
-  margin-top: 20px;
-`;
+export default function ExpenseList({ expenses, updateExpense, deleteExpense }) {
+  const { user } = useAuth();
 
-const ExpenseItem = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #ffffff;
-  border-radius: 8px;
-  padding: 10px;
-  margin-bottom: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-`;
+  const handleClick = (expense) => {
+    console.log('User ID:', user.id);
+    console.log('Expense User ID:', expense.userId);
 
-const ExpenseInfo = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
+    if (expense.userId !== user.id) {
+      alert('작성자만 수정 및 삭제가 가능합니다.');
+    } else {
+      const isEdit = window.confirm('이 항목을 수정하시겠습니까?');
+      if (isEdit) {
+        const newItem = prompt('새로운 항목 이름을 입력하세요:', expense.item);
+        const newAmount = prompt('새로운 금액을 입력하세요:', expense.amount);
+        const newDescription = prompt('새로운 설명을 입력하세요:', expense.description);
 
-const ExpenseDate = styled.span`
-  font-size: 12px;
-  color: #666;
-`;
+        if (newItem && newAmount && newDescription) {
+          updateExpense(expense.id, {
+            ...expense,
+            item: newItem,
+            amount: newAmount,
+            description: newDescription,
+          });
+        }
+      } else {
+        const isDelete = window.confirm('이 항목을 삭제하시겠습니까?');
+        if (isDelete) {
+          deleteExpense(expense.id);
+        }
+      }
+    }
+  };
 
-const ExpenseDescription = styled.span`
-  font-size: 14px;
-  font-weight: 500;
-  color: #333;
-`;
-
-const ExpenseAmount = styled.span`
-  font-size: 16px;
-  font-weight: bold;
-  color: #007bff;
-`;
-
-const ButtonGroup = styled.div`
-  display: flex;
-  gap: 10px;
-`;
-
-const ActionButton = styled.button`
-  padding: 5px 10px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 12px;
-  cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
-
-  &:hover {
-    background-color: #0056b3;
-  }
-`;
-
-const DeleteButton = styled(ActionButton)`
-  background-color: #ff4d4d;
-
-  &:hover {
-    background-color: #cc0000;
-  }
-`;
-
-const ExpenseList = ({ expenses, updateExpense, deleteExpense }) => {
   return (
-    <ListContainer>
+    <div style={listStyle}>
       {expenses.map((expense) => (
-        <ExpenseItem key={expense.id}>
-          <ExpenseInfo>
-            <ExpenseDate>{expense.date}</ExpenseDate>
-            <ExpenseDescription>{expense.item} - {expense.description} (by {expense.createdBy})</ExpenseDescription>
-            <ExpenseAmount>{expense.amount.toLocaleString()} 원</ExpenseAmount>
-          </ExpenseInfo>
-          <ButtonGroup>
-            <ActionButton onClick={() => updateExpense(expense.id)}>수정</ActionButton>
-            <DeleteButton onClick={() => deleteExpense(expense.id)}>삭제</DeleteButton>
-          </ButtonGroup>
-        </ExpenseItem>
+        <div key={expense.id} style={cardStyle} onClick={() => handleClick(expense)}>
+          <div style={cardHeaderStyle}>
+            <div style={cardTitleStyle}>{expense.item}</div>
+            <div style={cardAmountStyle}>{expense.amount} 원</div>
+          </div>
+          <div style={cardBodyStyle}>
+            <div style={cardDateStyle}>{expense.date}</div>
+            <div style={cardDescriptionStyle}>{expense.description}</div>
+          </div>
+        </div>
       ))}
-    </ListContainer>
+    </div>
   );
+}
+
+const listStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '20px',
+  marginTop: '20px'
 };
 
-export default ExpenseList;
+const cardStyle = {
+  backgroundColor: '#FFFFFF',
+  borderRadius: '10px',
+  padding: '20px',
+  boxShadow: '0 0 10px rgba(0,0,0,0.1)',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '10px',
+  cursor: 'pointer'
+};
+
+const cardHeaderStyle = {
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  borderBottom: '1px solid #D1D5DB',
+  paddingBottom: '10px',
+  marginBottom: '10px'
+};
+
+const cardTitleStyle = {
+  fontSize: '18px',
+  fontWeight: 'bold'
+};
+
+const cardAmountStyle = {
+  fontSize: '18px',
+  color: '#38B000',
+  fontWeight: 'bold'
+};
+
+const cardBodyStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '5px'
+};
+
+const cardDateStyle = {
+  fontSize: '14px',
+  color: '#6B7280'
+};
+
+const cardDescriptionStyle = {
+  fontSize: '16px'
+};

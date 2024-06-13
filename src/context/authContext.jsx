@@ -1,57 +1,87 @@
-import { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getUserInfo, login as loginApi, register as registerApi } from '../api/auth';
+import axios from 'axios';
 
-// AuthContext 생성
-const AuthContext = createContext();
+export const AuthContext = createContext();
 
-// AuthProvider 컴포넌트
+const API_URL = 'https://moneyfulpublicpolicy.co.kr';
+
 export const AuthProvider = ({ children }) => {
-    const [auth, setAuth] = useState({ isAuthenticated: false, user: null, accessToken: null });
+    const [user, setUser] = useState(null);
     const navigate = useNavigate();
 
-    // 로그인 함수
-    const login = async (credentials) => {
-        const response = await loginApi(credentials);
-        setAuth({ isAuthenticated: true, user: response.userId, accessToken: response.accessToken });
-        localStorage.setItem('accessToken', response.accessToken);
-    };
-
-    // 로그아웃 함수
-    const logout = () => {
-        setAuth({ isAuthenticated: false, user: null, accessToken: null });
-        localStorage.removeItem('accessToken');
-        navigate('/login');
-    };
-
-    // 회원가입 함수
-    const register = async (userData) => {
-        await registerApi(userData);
-    };
-
-    // 인증 상태 확인 함수
-    const checkAuth = async () => {
-        const token = localStorage.getItem('accessToken');
+    useEffect(() => {
+        const token = localStorage.getItem('token');
         if (token) {
-            try {
-                const response = await getUserInfo(token);
-                setAuth({ isAuthenticated: true, user: response.id, accessToken: token });
-            } catch (error) {
-                logout();
-            }
+            axios.get(`${API_URL}/user`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }).then(response => {
+                setUser(response.data);
+            }).catch(() => {
+                localStorage.removeItem('token');
+                navigate('/login');
+            });
+        }
+    }, [navigate]);
+
+    const login = async (credentials) => {
+        try {
+            const response = await axios.post(`${API_URL}/login`, credentials);
+            localStorage.setItem('token', response.data.accessToken);
+            setUser(response.data);
+            navigate('/');
+        } catch (error) {
+            throw new Error('로그인 실패: ' + error.response.data.message);
         }
     };
 
-    useEffect(() => {
-        checkAuth();
-    }, []);
+    const register = async (credentials) => {
+        try {
+            await axios.post(`${API_URL}/register`, credentials);
+        } catch (error) {
+            throw new Error('회원가입 실패: ' + error.response.data.message);
+        }
+    };
+
+    const logout = () => {
+        localStorage.removeItem('token');
+        setUser(null);
+        navigate('/login');
+    };
+
+    const updateProfile = async (profileData) => {
+        const token = localStorage.getItem('token');
+        const formData = new FormData();
+        formData.append('avatar', profileData.avatar);
+        formData.append('nickname', profileData.nickname);
+
+        try {
+            const response = await axios.patch(`${API_URL}/profile`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            setUser(response.data);
+        } catch (error) {
+            throw new Error('프로필 업데이트 실패: ' + error.response.data.message);
+        }
+    };
 
     return (
-        <AuthContext.Provider value={{ auth, login, logout, register }}>
+        <AuthContext.Provider value={{ user, setUser, login, logout, register, updateProfile }}>
             {children}
         </AuthContext.Provider>
     );
 };
 
-// useAuth 훅
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+    const context = useContext(AuthContext);
+    if (!context) {
+        throw new Error('useAuth must be used within an AuthProvider');
+    }
+    return context;
+};

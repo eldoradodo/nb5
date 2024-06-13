@@ -1,29 +1,31 @@
+// src/hooks/useExpenses.js
+
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getExpenses, addExpense, updateExpense, deleteExpense } from '../api/expenses';
 
-export const useExpenses = () => {
+export const useExpenses = (month) => {
     const queryClient = useQueryClient();
 
     const { data: expenses, error, isLoading } = useQuery({
-        queryKey: ['expenses'],
-        queryFn: getExpenses,
+        queryKey: ['expenses', month],
+        queryFn: () => getExpenses(month)
     });
 
-    const addExpenseMutation = useMutation({
+    const mutationAdd = useMutation({
         mutationFn: addExpense,
         onSuccess: () => {
             queryClient.invalidateQueries(['expenses']);
         }
     });
 
-    const updateExpenseMutation = useMutation({
+    const mutationUpdate = useMutation({
         mutationFn: updateExpense,
         onSuccess: () => {
             queryClient.invalidateQueries(['expenses']);
         }
     });
 
-    const deleteExpenseMutation = useMutation({
+    const mutationDelete = useMutation({
         mutationFn: deleteExpense,
         onSuccess: () => {
             queryClient.invalidateQueries(['expenses']);
@@ -34,8 +36,8 @@ export const useExpenses = () => {
         expenses,
         error,
         isLoading,
-        addExpense: addExpenseMutation.mutate,
-        updateExpense: updateExpenseMutation.mutate,
-        deleteExpense: deleteExpenseMutation.mutate
+        addExpense: mutationAdd.mutate,
+        updateExpense: mutationUpdate.mutate,
+        deleteExpense: mutationDelete.mutate
     };
 };
