@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:5000/expenses';
+const BASE_URL = 'https://polarized-gaudy-scent.glitch.me/expenses';
 
 // 모든 지출 항목 가져오기
 export const getExpenses = async () => {
